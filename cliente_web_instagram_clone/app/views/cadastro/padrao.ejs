@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Instagram Clone - WEB</title>
+		
+		<!-- JQuery -->
+		<script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<div class="col-md-12">
+					<div class="container-fluid">
+						<img alt="Instagram Clone - Versão WEB" src="images/logo2.jpg" class="logo2">
+						<img alt="Incluir" src="images/incluir.jpg" class="pull-right btn-incluir" id="btn_incluir">						
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		<div class="container" id="container_form">
+			<div class="panel panel-default">
+
+				<form class="form-cadastro" action="/cadastrar" method="POST">
+			
+					<div class="row">
+						
+						<div class="col-xs-4">
+							<div class="form-group">
+								<label for="usuario" class="">Usuário</label>
+								<input type="usuario" class="" id="usuario" name="usuario" placeholder="Usuário" required="true">
+							</div>
+						</div>
+						
+						<div class="col-xs-4">
+							<div class="form-group">
+								<label for="senha" class="">Senha</label>
+								<input type="password" class="" id="senha" name="senha" placeholder="Password"  required="true">
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<div class="form-group">
+								<label for="senha" class="">Confirme sua senha</label>
+								<input type="password" class="" id="senhaConfirm" name="senhaConfirm" placeholder="Password"  required="true">
+							</div>
+						</div>
+					</div>
+				
+				
+					<div class="form-group row">
+						<button type="submit" class="btn btn-primary">Confirmar cadastro</button>
+					</div>
+					
+				</form>
+				<div id="mensagem"></div>
+			</div>
+		</div>
+	</body>
+</html>
