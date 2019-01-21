@@ -34,6 +34,7 @@
 											data[i].titulo + 
 										'</span>' +
 										'<img src="http://localhost:8080/imagens/'+data[i].url_imagem+'" />'+
+										'<button type="button" value="'+data[i]._id+'" class="btn btn-default btn_remover_foto" >X</button>' +
 										'<div class="comentarios" id="comentarios_'+data[i]._id+'"></div>'+
 										'<div class="comentar">'+
 											'<input type="text" class="form-control input_comentario" id="postagem_'+data[i]._id+'" placeholder="Adicione um comentário...">' +
@@ -56,6 +57,21 @@
 								}
 
 							}
+							$('.btn_remover_foto').click(function(){
+								var id_foto = this.value;
+								console.log(id_foto);
+								const xhr = new XMLHttpRequest();
+								xhr.open('DELETE','http://localhost:8080/api/foto/'+id_foto);
+								
+								xhr.onload = function(){
+									if(xhr.status === 200){
+										window.location.href = '/home';
+									}
+								}
+
+								xhr.send();
+
+							});
 
 							$('.btn_remover_postagem').click(function(){
 								var id_comentario = this.value;
@@ -86,6 +102,7 @@
 									if(xhr.status === 200){
 										window.location.href = '/home';
 									}
+									window.location.href = '/home';
 								}
 
 								xhr.send(JSON.stringify({comentario : comentario}));

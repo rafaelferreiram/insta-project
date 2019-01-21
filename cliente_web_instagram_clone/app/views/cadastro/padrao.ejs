@@ -13,6 +13,41 @@
 	
 		<!-- incluindo css -->
 		<link href="css/style.css" rel="stylesheet">
+		
+		<script>
+			$(document).ready(function(){
+
+				
+				$('#btn-cadastrar').click(function(){
+
+					// criar um formData
+					var formData = new FormData();
+
+					var usuario = document.getElementById("usuario").value;
+					var senha = document.getElementById("senha").value;
+
+					formData.append("usuario", usuario);
+					formData.append("senha", senha);
+
+					// criar xmlhttprequest
+					var xhr = new XMLHttpRequest();
+
+					// verificar as mudanças de estado
+					xhr.onreadystatechange = function(){
+						if(xhr.readyState == 4){
+							var resposta = xhr.responseText;
+							document.getElementById('mensagem').innerHTML = resposta;
+						}
+					}
+
+					//fazer o envio do nosso request
+					xhr.open("POST", "http://localhost:8080/api/cad");
+					xhr.send(formData);
+				});
+
+			});
+		</script>
+
 
 	</head>
 
@@ -49,17 +84,11 @@
 								<input type="password" class="" id="senha" name="senha" placeholder="Password"  required="true">
 							</div>
 						</div>
-						<div class="col-xs-4">
-							<div class="form-group">
-								<label for="senha" class="">Confirme sua senha</label>
-								<input type="password" class="" id="senhaConfirm" name="senhaConfirm" placeholder="Password"  required="true">
-							</div>
-						</div>
 					</div>
 				
 				
 					<div class="form-group row">
-						<button type="submit" class="btn btn-primary">Confirmar cadastro</button>
+						<button type="submit" class="btn btn-primary" id="btn-cadastrar">Confirmar cadastro</button>
 					</div>
 					
 				</form>

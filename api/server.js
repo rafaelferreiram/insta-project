@@ -3,7 +3,9 @@ var express = require('express'),
     mongodb = require('mongodb'),
     objectId = require('mongodb').ObjectID,
     multiparty = require('connect-multiparty')
-    fs = require('fs');
+    fs = require('fs'),
+    crypto = require('crypto'),
+    expressSession = require('express-session');
 
 var app = express();
 
@@ -20,6 +22,11 @@ app.use(function(req,res,next){
 
     next();
 });
+app.use(expressSession({
+	secret:'lkasdhkl',
+	resave: false,
+	saveUninitialized: false
+}));
 
 var port = 8080;
 
@@ -70,6 +77,56 @@ app.post('/api', function(req, res){
             });
         });
     });
+
+//POST User
+app.post('/api/cad', function(req, res){
+    db.open(function(err, mongoclient){
+        mongoclient.collection('usuarios', function(err, collection){
+            var dados = req.body;
+            var senhaCrypto = crypto.createHash("md5").update(dados.senha).digest("hex");
+            dados.senha = senhaCrypto;
+            console.log(dados);
+            collection.insert(dados, function(err, records){
+                if(err){
+                    res.json({'status': 'erro'});
+                }else{
+                    res.json({'status': 'inclusao realizada com sucesso'});
+                }
+                mongoclient.close();
+            });
+        });
+    });  
+});
+
+//GET User
+app.get('/api/get/:id',function(req,res){
+    db.open(function(err,mongoclient){
+        mongoclient.collection("usuarios", function(err, collection){
+            var dados = req.body;
+            var senhaCrypto = crypto.createHash("md5").update(dados.senha).digest("hex");
+            dados.senha = senhaCrypto;
+
+            collection.find(dados).toArray(function(err, result){
+                
+                if(result[0] != undefined){
+
+                    req.session.autorizado = true;
+                    console.log(req.session.autorizado);
+                    req.session.usuario = result[0].usuario;
+
+                }
+
+                if(req.session.autorizado){
+                    res.redirect("home/padrao");
+                }else{
+                    res.render("index/home", { validacao: {} });
+                }
+
+            });
+            mongoclient.close();
+        });
+    });
+});
 
 // GET(ready)
 app.get('/api', function(req, res){
@@ -156,6 +213,25 @@ app.delete('/api/:id', function(req, res){
                           }
                 },
                 {multi: true},
+                function(err, records){
+                    if(err){
+                        res.json(err);
+                    }else{
+                        res.json(records);
+                    }
+                    mongoclient.close();
+                }  
+            );
+        });
+    });
+});
+
+//DELETE img
+app.delete('/api/foto/:id', function(req, res){
+    db.open(function(err, mongoclient){
+        mongoclient.collection('postagens', function(err, collection){
+            collection.remove(
+                { _id : objectId(req.params.id) },
                 function(err, records){
                     if(err){
                         res.json(err);
