@@ -52,7 +52,6 @@ app.post('/api', function(req, res){
     var image_name = timestamp+'_'+req.files.arquivo.originalFilename;
     var path_origin = req.files.arquivo.path;
     var path_destiny = './uploads/'+image_name;
-    console.log(timestamp);
     var dados = {
         url_imagem : image_name,
         titulo: req.body.titulo 
@@ -68,9 +67,10 @@ app.post('/api', function(req, res){
             mongoclient.collection('postagens', function(err, collection){
                 collection.insert(dados, function(err, records){
                     if(err){
-                        res.json({'status': 'erro'});
+                        console.log('status erro');
                     }else{
-                        res.json({'status': 'inclusao realizada com sucesso'});
+                       console.log('status inclusao realizada com sucesso');
+                       
                     }
                     mongoclient.close();
                 });
@@ -85,7 +85,6 @@ app.post('/api/cad', function(req, res){
             var dados = req.body;
             var senhaCrypto = crypto.createHash("md5").update(dados.senha).digest("hex");
             dados.senha = senhaCrypto;
-            console.log(dados);
             collection.insert(dados, function(err, records){
                 if(err){
                     res.json({'status': 'erro'});
