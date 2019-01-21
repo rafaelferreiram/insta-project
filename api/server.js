@@ -87,9 +87,10 @@ app.post('/api/cad', function(req, res){
             dados.senha = senhaCrypto;
             collection.insert(dados, function(err, records){
                 if(err){
-                    res.json({'status': 'erro'});
+                    console.log('status erro');
                 }else{
-                    res.json({'status': 'inclusao realizada com sucesso'});
+                   console.log('status inclusao realizada com sucesso');
+                   
                 }
                 mongoclient.close();
             });
@@ -98,28 +99,29 @@ app.post('/api/cad', function(req, res){
 });
 
 //GET User
-app.get('/api/get/:id',function(req,res){
+app.get('/api/get/:usuario',function(req,res){
     db.open(function(err,mongoclient){
         mongoclient.collection("usuarios", function(err, collection){
-            var dados = req.body;
-            var senhaCrypto = crypto.createHash("md5").update(dados.senha).digest("hex");
-            dados.senha = senhaCrypto;
+            var usuario = req.params.usuario;
+            var obj = JSON.parse(usuario);
+            var senhaCrypto = crypto.createHash("md5").update(obj.senha).digest("hex");
+            obj.senha = senhaCrypto;
+            
+            console.log(obj);
 
-            collection.find(dados).toArray(function(err, result){
+            collection.find(obj).toArray(function(err, result){
                 
                 if(result[0] != undefined){
 
                     req.session.autorizado = true;
-                    console.log(req.session.autorizado);
                     req.session.usuario = result[0].usuario;
-
+                    console.log('autorizado');
+                    
                 }
-
-                if(req.session.autorizado){
-                    res.redirect("home/padrao");
-                }else{
-                    res.render("index/home", { validacao: {} });
+                else{
+                    req.session.autorizado = false;
                 }
+                return req.session.autorizado;
 
             });
             mongoclient.close();

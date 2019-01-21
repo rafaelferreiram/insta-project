@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
 
 		<title>Instagram Clone - WEB</title>
-		
+			
 		<!-- JQuery -->
 		<script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
 
@@ -14,22 +14,27 @@
 		<!-- incluindo css -->
 		<link href="css/style.css" rel="stylesheet">
 
+
 		<script>
-			$('#entrar').click(function(){
-								var id_comentario = this.value;
+				$(document).ready(function(){
+					$('#entrar').click(function(){
 
-								var xhr = new XMLHttpRequest();
-								xhr.open('GET', 'http://localhost:8080/api/get'+id_comentario);
-								
-								xhr.onload = function(){
-									if(xhr.status === 200){
-										window.location.href = '/home';
-									}
-								}
+					var xhr = new XMLHttpRequest();
+					var name = document.getElementById("usuario").value;
+					var senhaValue = document.getElementById("senha").value;
 
-								xhr.send();
-
-							});
+					var dados = JSON.stringify({usuario: name ,senha:senhaValue});
+					xhr.open('GET','http://localhost:8080/api/get/'+dados);
+					xhr.onload = function(){
+						
+						if(xhr.responseText === true ){
+							window.location.href = '/home';
+						}			
+					}
+					
+					xhr.send();
+					});
+				});
 		</script>
 
 	</head>
@@ -53,7 +58,7 @@
 									<img src="images/logo1.jpg" class="img-responsive img-center" />
 									<br />
 
-									<form action="/home" method="get">
+									<form action="/autenticar" method="POST">
 										<div class="form-group">
 											<input type="text" name="usuario" id="usuario" class="form-control" placeholder="Nome de usuário">
 										</div>
@@ -90,7 +95,7 @@
 					</div>
                 </div>
 
-                <div class="col-md-2"></div>
+                <div class="col-md-2" id="msg"></div>
             </div>
         </div>
 		
